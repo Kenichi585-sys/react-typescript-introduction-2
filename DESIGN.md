@@ -189,6 +189,88 @@ App (users, activeTab, sortState, filterState, isFormOpen)
 
 ---
 
+## 補足：空セルの表示ルール
+
+テーブルの「空セル」には2種類の意味がある。ユーザーが区別できるように表示を分ける。
+
+| 状態 | 表示 | 例 |
+|---|---|---|
+| そのロールに存在しないカラム（全員タブのみ） | 空白（何も表示しない） | 生徒行の「実務経験月数」 |
+| 値が未入力（任意フィールド） | `—` | 趣味を入力しなかった場合 |
+
+---
+
 ## Step 4: ロジックの分離とファイル構成
 
-（未決定 — Step 4 完了後に追記）
+### ファイル構成
+
+```
+src/
+├── main.tsx                — エントリーポイント（Vite デフォルト）
+├── App.tsx                 — state 管理、表示用リスト計算、全体レイアウト
+├── types.ts                — 全型定義 + 型ガード関数
+├── data.ts                 — 初期データ（USER_LIST）
+├── utils/
+│   ├── filter.ts           — フィルタ適用 + フィルタ選択肢収集
+│   ├── sort.ts             — ソート適用
+│   ├── match.ts            — 対応可能メンター/生徒の算出
+│   └── validation.ts       — バリデーションルール
+├── components/
+│   ├── Toolbar.tsx
+│   ├── UserTable.tsx
+│   ├── TableHeader.tsx
+│   ├── UserFormModal.tsx
+│   ├── UserForm.tsx
+│   └── ListField.tsx
+└── styles/                  — CSS（構成は実装時に決定）
+```
+
+### 各ファイルの役割
+
+#### `types.ts`
+
+Step 1 で決めた型定義をすべて集約。型ガード関数もここに置く（型とセットで使うため）。
+
+```ts
+export const isStudent = (user: User): user is Student =>
+  user.role === "student";
+
+export const isMentor = (user: User): user is Mentor =>
+  user.role === "mentor";
+```
+
+- アロー関数で統一（プロジェクト全体の一貫性のため）
+- `function` 宣言の巻き上げ（hoisting）は、別ファイルから import する場合は無関係
+
+#### `data.ts`
+
+初期データ `USER_LIST` を配置。`id` は UUID 文字列に変換済みのものを定義する。
+
+#### `utils/sort.ts`
+
+ソートを適用する関数。`SortState` が `null` なら元の順序のまま返す。
+
+#### `utils/filter.ts`
+
+フィルタを適用する関数 + フィルタ選択肢を全ユーザーから動的に収集する関数。
+
+#### `utils/match.ts`
+
+対応可能メンター/生徒の算出。常に全ユーザーリストを母集団にする。
+
+#### `utils/validation.ts`
+
+SPEC.md のバリデーションルールを関数として定義。UserForm コンポーネントから呼び出す。
+
+### App.tsx での表示用リスト計算パイプライン
+
+```
+users（全データ）
+  → タブで絞り込み（App 内インライン。1行で済む単純なロジック）
+  → フィルタ適用（utils/filter.ts）
+  → ソート適用（utils/sort.ts）
+  → UserTable に渡す
+```
+
+- この計算は `useMemo` で依存値が変わったときだけ再実行する
+- 対応可能メンター/生徒の算出（utils/match.ts）は別途、全ユーザーリストを母集団として計算
