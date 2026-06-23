@@ -75,6 +75,27 @@
   white-space: nowrap;
 }
 
+.sort-header-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+
+.sort-icon.is-idle {
+  opacity: 0.45;
+}
+
+.sort-icon.is-active {
+  opacity: 1;
+}
+
 .app-modal-placeholder {
   position: fixed;
   inset: 0;

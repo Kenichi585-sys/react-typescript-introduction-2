@@ -5,6 +5,8 @@ import {
   type Student,
   type Tab,
   type User,
+  type SortKey,
+  type SortState,
 } from "../types";
 import { TableHeader } from "./TableHeader";
 import {
@@ -16,6 +18,8 @@ import {
 type UserTableProps = {
   users: User[];
   activeTab: Tab;
+  sortState: SortState;
+  onSortClick: (key: SortKey) => void;
 };
 
 const EMPTY_OPTIONAL = "—";
@@ -129,13 +133,22 @@ const getCellValue = (user: User, column: ColumnDef, activeTab: Tab): string => 
   return "";
 };
 
-export const UserTable = ({ users, activeTab }: UserTableProps) => {
+export const UserTable = ({
+  users,
+  activeTab,
+  sortState,
+  onSortClick,
+}: UserTableProps) => {
   const columns = getColumnsForTab(activeTab);
 
   return (
     <div className="user-table-wrapper">
       <table className="user-table">
-        <TableHeader activeTab={activeTab} />
+        <TableHeader
+          activeTab={activeTab}
+          sortState={sortState}
+          onSortClick={onSortClick}
+        />
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>

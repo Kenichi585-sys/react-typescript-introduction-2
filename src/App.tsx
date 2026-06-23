@@ -3,10 +3,12 @@ import "./App.css";
 import { UserTable } from "./components/UserTable";
 import { Toolbar } from "./components/Toolbar";
 import { USER_LIST } from "./data";
+import { applySort } from "./utils/sort";
 import {
   isMentor,
   isStudent,
   type FilterState,
+  type SortKey,
   type SortState,
   type Tab,
   type User,
@@ -33,14 +35,23 @@ function App() {
     setFilterState(INITIAL_FILTER_STATE);
   };
 
-  const handleSortChange = (sort: SortState) => {
-    setSortState(sort);
+  const handleSortClick = (key: SortKey) => {
+    if (sortState?.key !== key) {
+      setSortState({ key, direction: "asc" });
+      return;
+    }
+    if (sortState.direction === "asc") {
+      setSortState({ key, direction: "desc" });
+      return;
+    }
+    setSortState(null);
   };
 
   const handleFilterChange = (filter: FilterState) => {
     setFilterState(filter);
   };
 
+  // ステップ8で UserForm の onSubmit に渡す。定義だけ先に置いている。
   const handleAddUser = (user: User) => {
     setUsers((prev) => [...prev, user]);
     setActiveTab("all");
@@ -48,20 +59,17 @@ function App() {
     setFilterState(INITIAL_FILTER_STATE);
     setIsFormOpen(false);
   };
-
-  // ステップ3以降: Toolbar / UserTable / UserFormModal をここに配置
-  // ステップ6以降: useMemo でタブ絞り込み → フィルタ → ソートのパイプラインを追加
-  void handleAddUser;
+  void handleAddUser; // ステップ8まで未使用。TypeScript の未使用警告回避。
 
   const displayUsers = useMemo(() => {
+    let result = users;
     if (activeTab === "student") {
-      return users.filter(isStudent);
+      result = result.filter(isStudent);
+    } else if (activeTab === "mentor") {
+      result = result.filter(isMentor);
     }
-    if (activeTab === "mentor") {
-      return users.filter(isMentor);
-    }
-    return users;
-  }, [users, activeTab]);
+    return applySort(result, sortState);
+  }, [users, activeTab, sortState]);
 
   return (
     <div className="app">
@@ -87,17 +95,6 @@ function App() {
             <button
               type="button"
               onClick={() =>
-                handleSortChange({ key: "score", direction: "asc" })
-              }
-            >
-              [仮] スコア昇順
-            </button>
-            <button type="button" onClick={() => handleSortChange(null)}>
-              [仮] ソート解除
-            </button>
-            <button
-              type="button"
-              onClick={() =>
                 handleFilterChange({ ...filterState, hobbies: ["旅行"] })
               }
             >
@@ -115,7 +112,12 @@ function App() {
           </button>
         </section>
 
-        <UserTable users={displayUsers} activeTab={activeTab} />
+        <UserTable
+          users={displayUsers}
+          activeTab={activeTab}
+          sortState={sortState}
+          onSortClick={handleSortClick}
+        />
       </main>
 
       {/* UserFormModal（ステップ8で実装） */}
