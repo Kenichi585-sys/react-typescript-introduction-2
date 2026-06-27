@@ -62,18 +62,14 @@ function App() {
   };
   void handleAddUser; // ステップ8まで未使用。TypeScript の未使用警告回避。
 
-  const filterOptions = useMemo(() => {
-    const options = {
+  const filterOptions = useMemo(
+    () => ({
       hobbies: collectFilterOptions(users, "hobbies"),
       studyLangs: collectFilterOptions(users, "studyLangs"),
       useLangs: collectFilterOptions(users, "useLangs"),
-    };
-    console.log("=== filterOptions（チェックボックスの選択肢）===");
-    console.log("趣味:", options.hobbies);
-    console.log("勉強中の言語:", options.studyLangs);
-    console.log("現場で使っている言語:", options.useLangs);
-    return options;
-  }, [users]);
+    }),
+    [users],
+  );
 
   const displayUsers = useMemo(() => {
     let result = users;

@@ -36,21 +36,12 @@ export const Toolbar = ({
     value: string,
     checked: boolean,
   ) => {
-    console.log("=== チェックボックス変更 ===");
-    console.log("カテゴリ:", category, "値:", value, "チェック:", checked);
-
     const selected = filterState[category];
-    console.log("変更前の選択:", JSON.stringify(selected));
-
     const nextSelected = checked
       ? [...selected, value]
       : selected.filter((item) => item !== value);
-    console.log("変更後の選択:", JSON.stringify(nextSelected));
 
-    const nextFilterState = { ...filterState, [category]: nextSelected };
-    console.log("App に渡す filterState:", JSON.stringify(nextFilterState));
-
-    onFilterChange(nextFilterState);
+    onFilterChange({ ...filterState, [category]: nextSelected });
   };
 
   return (

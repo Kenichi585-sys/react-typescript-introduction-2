@@ -62,24 +62,22 @@ const userMatchesCategory = (
   selected: string[],
 ): boolean => {
   if (selected.length === 0) {
-    console.log(`  [${category}] 選択なし → 無条件で通過`);
     return true;
   }
 
-  let result = false;
   switch (category) {
     case "hobbies":
-      result = user.hobbies.some((hobby) => selected.includes(hobby));
-      console.log(`  [hobbies] ${user.name}の趣味=${JSON.stringify(user.hobbies)}, 選択=${JSON.stringify(selected)} → ${result ? "✅マッチ" : "❌不一致"}`);
-      return result;
+      return user.hobbies.some((hobby) => selected.includes(hobby));
     case "studyLangs":
-      result = isStudent(user) && user.studyLangs.some((lang) => selected.includes(lang));
-      console.log(`  [studyLangs] ${user.name} → ${result ? "✅マッチ" : "❌不一致"}`);
-      return result;
+      return (
+        isStudent(user) &&
+        user.studyLangs.some((lang) => selected.includes(lang))
+      );
     case "useLangs":
-      result = isMentor(user) && user.useLangs.some((lang) => selected.includes(lang));
-      console.log(`  [useLangs] ${user.name} → ${result ? "✅マッチ" : "❌不一致"}`);
-      return result;
+      return (
+        isMentor(user) &&
+        user.useLangs.some((lang) => selected.includes(lang))
+      );
   }
 };
 
@@ -90,22 +88,9 @@ export const applyFilter = (
 ): User[] => {
   const categories = getFilterCategoriesForTab(activeTab);
 
-  console.log("--- applyFilter 開始 ---");
-  console.log("タブ:", activeTab);
-  console.log("使うカテゴリ:", categories);
-  console.log("filterState:", JSON.stringify(filterState));
-  console.log("フィルタ前の人数:", users.length, "人");
-
-  const result = users.filter((user) => {
-    console.log(`▶ ${user.name} を判定中...`);
-    const pass = categories.every((category) =>
+  return users.filter((user) =>
+    categories.every((category) =>
       userMatchesCategory(user, category, filterState[category]),
-    );
-    console.log(`  → ${user.name}: ${pass ? "✅残す" : "❌除外"}`);
-    return pass;
-  });
-
-  console.log("フィルタ後の人数:", result.length, "人");
-  console.log("--- applyFilter 終了 ---");
-  return result;
+    ),
+  );
 };
