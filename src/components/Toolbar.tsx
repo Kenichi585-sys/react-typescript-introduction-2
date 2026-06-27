@@ -1,8 +1,19 @@
-import type { Tab } from "../types";
+import type {
+  FilterCategory,
+  FilterState,
+  Tab,
+} from "../types";
+import {
+  FILTER_CATEGORY_LABELS,
+  getFilterCategoriesForTab,
+} from "../utils/filter";
 
 type ToolbarProps = {
   activeTab: Tab;
   onTabChange: (tab: Tab) => void;
+  filterState: FilterState;
+  filterOptions: Record<FilterCategory, string[]>;
+  onFilterChange: (filter: FilterState) => void;
 };
 
 const TABS: { value: Tab; label: string }[] = [
@@ -11,7 +22,37 @@ const TABS: { value: Tab; label: string }[] = [
   { value: "mentor", label: "メンターのみ" },
 ];
 
-export const Toolbar = ({ activeTab, onTabChange }: ToolbarProps) => {
+export const Toolbar = ({
+  activeTab,
+  onTabChange,
+  filterState,
+  filterOptions,
+  onFilterChange,
+}: ToolbarProps) => {
+  const categories = getFilterCategoriesForTab(activeTab);
+
+  const handleCheckboxChange = (
+    category: FilterCategory,
+    value: string,
+    checked: boolean,
+  ) => {
+    console.log("=== チェックボックス変更 ===");
+    console.log("カテゴリ:", category, "値:", value, "チェック:", checked);
+
+    const selected = filterState[category];
+    console.log("変更前の選択:", JSON.stringify(selected));
+
+    const nextSelected = checked
+      ? [...selected, value]
+      : selected.filter((item) => item !== value);
+    console.log("変更後の選択:", JSON.stringify(nextSelected));
+
+    const nextFilterState = { ...filterState, [category]: nextSelected };
+    console.log("App に渡す filterState:", JSON.stringify(nextFilterState));
+
+    onFilterChange(nextFilterState);
+  };
+
   return (
     <div className="toolbar">
       <div className="toolbar-tabs">
@@ -26,6 +67,36 @@ export const Toolbar = ({ activeTab, onTabChange }: ToolbarProps) => {
           >
             {tab.label}
           </button>
+        ))}
+      </div>
+
+      <div className="toolbar-filters">
+        {categories.map((category) => (
+          <fieldset key={category} className="toolbar-filter-group">
+            <legend>{FILTER_CATEGORY_LABELS[category]}</legend>
+            {filterOptions[category].length === 0 ? (
+              <p className="toolbar-filter-empty">選択肢なし</p>
+            ) : (
+              <div className="toolbar-filter-options">
+                {filterOptions[category].map((option) => (
+                  <label key={option} className="toolbar-filter-option">
+                    <input
+                      type="checkbox"
+                      checked={filterState[category].includes(option)}
+                      onChange={(e) =>
+                        handleCheckboxChange(
+                          category,
+                          option,
+                          e.target.checked,
+                        )
+                      }
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            )}
+          </fieldset>
         ))}
       </div>
     </div>

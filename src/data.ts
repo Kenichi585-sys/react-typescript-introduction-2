@@ -118,7 +118,7 @@ export const USER_LIST: User[] = [
     hobbies: ["ランニング", "旅行"],
     url: "https://hhh.com",
     experienceDays: 6000,
-    useLangs: ["Golang", "Rails"],
+    useLangs: ["GoLang", "Rails"],
     availableStartCode: 301,
     availableEndCode: 505,
   },

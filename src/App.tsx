@@ -4,6 +4,7 @@ import { UserTable } from "./components/UserTable";
 import { Toolbar } from "./components/Toolbar";
 import { USER_LIST } from "./data";
 import { applySort } from "./utils/sort";
+import { applyFilter, collectFilterOptions } from "./utils/filter";
 import {
   isMentor,
   isStudent,
@@ -61,6 +62,19 @@ function App() {
   };
   void handleAddUser; // ステップ8まで未使用。TypeScript の未使用警告回避。
 
+  const filterOptions = useMemo(() => {
+    const options = {
+      hobbies: collectFilterOptions(users, "hobbies"),
+      studyLangs: collectFilterOptions(users, "studyLangs"),
+      useLangs: collectFilterOptions(users, "useLangs"),
+    };
+    console.log("=== filterOptions（チェックボックスの選択肢）===");
+    console.log("趣味:", options.hobbies);
+    console.log("勉強中の言語:", options.studyLangs);
+    console.log("現場で使っている言語:", options.useLangs);
+    return options;
+  }, [users]);
+
   const displayUsers = useMemo(() => {
     let result = users;
     if (activeTab === "student") {
@@ -68,8 +82,9 @@ function App() {
     } else if (activeTab === "mentor") {
       result = result.filter(isMentor);
     }
+    result = applyFilter(result, filterState, activeTab);
     return applySort(result, sortState);
-  }, [users, activeTab, sortState]);
+  }, [users, activeTab, filterState, sortState]);
 
   return (
     <div className="app">
@@ -78,35 +93,16 @@ function App() {
       </header>
 
       <main className="app-main">
-        <Toolbar activeTab={activeTab} onTabChange={handleTabChange} />
+        <Toolbar
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          filterState={filterState}
+          filterOptions={filterOptions}
+          onFilterChange={handleFilterChange}
+        />
 
-        {/* --- 以下は開発用プレースホルダー（ステップ6: フィルタ / ステップ8: 新規作成） --- */}
+        {/* --- 開発用プレースホルダー（ステップ8: 新規作成） --- */}
         <section className="app-dev-placeholder">
-          <p>
-            sortState:{" "}
-            {sortState ? `${sortState.key} ${sortState.direction}` : "なし"}
-          </p>
-          <p>
-            filterState: hobbies={filterState.hobbies.length}, studyLangs=
-            {filterState.studyLangs.length}, useLangs=
-            {filterState.useLangs.length}
-          </p>
-          <div>
-            <button
-              type="button"
-              onClick={() =>
-                handleFilterChange({ ...filterState, hobbies: ["旅行"] })
-              }
-            >
-              [仮] 趣味:旅行
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange(INITIAL_FILTER_STATE)}
-            >
-              [仮] フィルタ解除
-            </button>
-          </div>
           <button type="button" onClick={() => setIsFormOpen(true)}>
             [仮] 新規作成を開く
           </button>

@@ -8,10 +8,7 @@ type TableHeaderProps = {
   onSortClick: (key: SortKey) => void;
 };
 
-const getSortIcon = (
-  key: ColumnKey,
-  sortState: SortState,
-): string | null => {
+const getSortIcon = (key: ColumnKey, sortState: SortState): string | null => {
   if (!sortState || sortState.key !== key) {
     return "⇅";
   }
