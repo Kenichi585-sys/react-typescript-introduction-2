@@ -14,6 +14,7 @@ type ToolbarProps = {
   filterState: FilterState;
   filterOptions: Record<FilterCategory, string[]>;
   onFilterChange: (filter: FilterState) => void;
+  onOpenForm: () => void;
 };
 
 const TABS: { value: Tab; label: string }[] = [
@@ -28,6 +29,7 @@ export const Toolbar = ({
   filterState,
   filterOptions,
   onFilterChange,
+  onOpenForm,
 }: ToolbarProps) => {
   const categories = getFilterCategoriesForTab(activeTab);
 
@@ -60,6 +62,10 @@ export const Toolbar = ({
           </button>
         ))}
       </div>
+
+      <button type="button" className="toolbar-create-button" onClick={onOpenForm}>
+        新規作成
+      </button>
 
       <div className="toolbar-filters">
         {categories.map((category) => (

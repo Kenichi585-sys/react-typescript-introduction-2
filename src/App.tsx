@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import "./App.css";
+import { UserFormModal } from "./components/UserFormModal";
 import { UserTable } from "./components/UserTable";
 import { Toolbar } from "./components/Toolbar";
 import { USER_LIST } from "./data";
@@ -52,7 +53,6 @@ function App() {
     setFilterState(filter);
   };
 
-  // ステップ8で UserForm の onSubmit に渡す。定義だけ先に置いている。
   const handleAddUser = (user: User) => {
     setUsers((prev) => [...prev, user]);
     setActiveTab("all");
@@ -60,7 +60,6 @@ function App() {
     setFilterState(INITIAL_FILTER_STATE);
     setIsFormOpen(false);
   };
-  void handleAddUser; // ステップ8まで未使用。TypeScript の未使用警告回避。
 
   const filterOptions = useMemo(
     () => ({
@@ -95,32 +94,23 @@ function App() {
           filterState={filterState}
           filterOptions={filterOptions}
           onFilterChange={handleFilterChange}
+          onOpenForm={() => setIsFormOpen(true)}
         />
-
-        {/* --- 開発用プレースホルダー（ステップ8: 新規作成） --- */}
-        <section className="app-dev-placeholder">
-          <button type="button" onClick={() => setIsFormOpen(true)}>
-            [仮] 新規作成を開く
-          </button>
-        </section>
 
         <UserTable
           users={displayUsers}
+          allUsers={users}
           activeTab={activeTab}
           sortState={sortState}
           onSortClick={handleSortClick}
         />
       </main>
 
-      {/* UserFormModal（ステップ8で実装） */}
-      {isFormOpen && (
-        <div className="app-modal-placeholder">
-          <p>UserFormModal — ステップ8で実装</p>
-          <button type="button" onClick={() => setIsFormOpen(false)}>
-            閉じる
-          </button>
-        </div>
-      )}
+      <UserFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSubmit={handleAddUser}
+      />
     </div>
   );
 }

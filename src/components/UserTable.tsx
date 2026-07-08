@@ -8,6 +8,7 @@ import {
   type SortKey,
   type SortState,
 } from "../types";
+import { getAvailableMentors, getAvailableStudents } from "../utils/match";
 import { TableHeader } from "./TableHeader";
 import {
   getColumnsForTab,
@@ -17,6 +18,7 @@ import {
 
 type UserTableProps = {
   users: User[];
+  allUsers: User[];
   activeTab: Tab;
   sortState: SortState;
   onSortClick: (key: SortKey) => void;
@@ -54,6 +56,7 @@ const isColumnApplicable = (user: User, column: ColumnDef, activeTab: Tab): bool
 const getStudentCellValue = (
   user: Student,
   key: ColumnKey,
+  allUsers: User[],
 ): string => {
   switch (key) {
     case "studyMinutes":
@@ -65,14 +68,17 @@ const getStudentCellValue = (
     case "score":
       return String(user.score);
     case "availableMentors":
-      // ステップ7で utils/match.ts と連携
-      return EMPTY_OPTIONAL;
+      return formatStringList(getAvailableMentors(user, allUsers));
     default:
       return "";
   }
 };
 
-const getMentorCellValue = (user: Mentor, key: ColumnKey): string => {
+const getMentorCellValue = (
+  user: Mentor,
+  key: ColumnKey,
+  allUsers: User[],
+): string => {
   switch (key) {
     case "experienceDays":
       return String(user.experienceDays);
@@ -83,8 +89,7 @@ const getMentorCellValue = (user: Mentor, key: ColumnKey): string => {
     case "availableEndCode":
       return String(user.availableEndCode);
     case "availableStudents":
-      // ステップ7で utils/match.ts と連携
-      return EMPTY_OPTIONAL;
+      return formatStringList(getAvailableStudents(user, allUsers));
     default:
       return "";
   }
@@ -113,7 +118,12 @@ const getCommonCellValue = (user: User, key: ColumnKey): string => {
   }
 };
 
-const getCellValue = (user: User, column: ColumnDef, activeTab: Tab): string => {
+const getCellValue = (
+  user: User,
+  column: ColumnDef,
+  activeTab: Tab,
+  allUsers: User[],
+): string => {
   if (!isColumnApplicable(user, column, activeTab)) {
     return "";
   }
@@ -123,11 +133,11 @@ const getCellValue = (user: User, column: ColumnDef, activeTab: Tab): string => 
   }
 
   if (column.role === "student" && isStudent(user)) {
-    return getStudentCellValue(user, column.key);
+    return getStudentCellValue(user, column.key, allUsers);
   }
 
   if (column.role === "mentor" && isMentor(user)) {
-    return getMentorCellValue(user, column.key);
+    return getMentorCellValue(user, column.key, allUsers);
   }
 
   return "";
@@ -135,6 +145,7 @@ const getCellValue = (user: User, column: ColumnDef, activeTab: Tab): string => 
 
 export const UserTable = ({
   users,
+  allUsers,
   activeTab,
   sortState,
   onSortClick,
@@ -154,7 +165,7 @@ export const UserTable = ({
             <tr key={user.id}>
               {columns.map((column) => (
                 <td key={column.key}>
-                  {getCellValue(user, column, activeTab)}
+                  {getCellValue(user, column, activeTab, allUsers)}
                 </td>
               ))}
             </tr>
