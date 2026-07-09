@@ -6,6 +6,7 @@ import type {
   UserFormState,
 } from "../types";
 import { validateUserForm, type UserFormErrors } from "../utils/validation";
+import { createListItem } from "../utils/listField";
 import { ListField } from "./ListField";
 
 type UserFormProps = {
@@ -13,10 +14,24 @@ type UserFormProps = {
   onCancel: () => void;
 };
 
-const createListItem = () => ({
-  id: crypto.randomUUID(),
-  value: "",
-});
+// 初期データ（data.ts）の値を例として表示
+const FORM_PLACEHOLDERS = {
+  name: "例：鈴木太郎",
+  email: "例：test1@happiness.com",
+  age: "例：26",
+  postCode: "例：100-0003",
+  phone: "例：0120000001",
+  hobby: "例：旅行",
+  url: "例：https://aaa.com",
+  studyMinutes: "例：3000",
+  taskCode: "例：101",
+  studyLang: "例：Rails",
+  score: "例：68",
+  experienceDays: "例：1850",
+  useLang: "例：Next.js",
+  availableStartCode: "例：201",
+  availableEndCode: "例：302",
+} as const;
 
 const createInitialStudentForm = (): StudentFormState => ({
   role: "student",
@@ -167,6 +182,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
         <input
           type="text"
           value={formState.name}
+          placeholder={FORM_PLACEHOLDERS.name}
           onChange={(e) => updateForm({ name: e.target.value })}
         />
         {errors.name && <p className="form-error">{errors.name}</p>}
@@ -177,6 +193,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
         <input
           type="email"
           value={formState.email}
+          placeholder={FORM_PLACEHOLDERS.email}
           onChange={(e) => updateForm({ email: e.target.value })}
         />
         {errors.email && <p className="form-error">{errors.email}</p>}
@@ -188,6 +205,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
           type="text"
           inputMode="numeric"
           value={formState.age}
+          placeholder={FORM_PLACEHOLDERS.age}
           onChange={(e) => updateForm({ age: e.target.value })}
         />
         {errors.age && <p className="form-error">{errors.age}</p>}
@@ -198,6 +216,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
         <input
           type="text"
           value={formState.postCode}
+          placeholder={FORM_PLACEHOLDERS.postCode}
           onChange={(e) => updateForm({ postCode: e.target.value })}
         />
         {errors.postCode && <p className="form-error">{errors.postCode}</p>}
@@ -209,6 +228,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
           type="text"
           inputMode="numeric"
           value={formState.phone}
+          placeholder={FORM_PLACEHOLDERS.phone}
           onChange={(e) => updateForm({ phone: e.target.value })}
         />
         {errors.phone && <p className="form-error">{errors.phone}</p>}
@@ -227,6 +247,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
         <input
           type="url"
           value={formState.url}
+          placeholder={FORM_PLACEHOLDERS.url}
           onChange={(e) => updateForm({ url: e.target.value })}
         />
         {errors.url && <p className="form-error">{errors.url}</p>}
@@ -240,6 +261,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
               type="text"
               inputMode="numeric"
               value={formState.studyMinutes}
+              placeholder={FORM_PLACEHOLDERS.studyMinutes}
               onChange={(e) => updateForm({ studyMinutes: e.target.value })}
             />
             {errors.studyMinutes && (
@@ -253,6 +275,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
               type="text"
               inputMode="numeric"
               value={formState.taskCode}
+              placeholder={FORM_PLACEHOLDERS.taskCode}
               onChange={(e) => updateForm({ taskCode: e.target.value })}
             />
             {errors.taskCode && <p className="form-error">{errors.taskCode}</p>}
@@ -262,6 +285,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
             label="勉強中の言語（必須）"
             items={formState.studyLangs}
             onChange={(items) => updateForm({ studyLangs: items })}
+            placeholder={FORM_PLACEHOLDERS.studyLang}
             error={errors.studyLangs}
           />
 
@@ -271,6 +295,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
               type="text"
               inputMode="numeric"
               value={formState.score}
+              placeholder={FORM_PLACEHOLDERS.score}
               onChange={(e) => updateForm({ score: e.target.value })}
             />
             {errors.score && <p className="form-error">{errors.score}</p>}
@@ -284,6 +309,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
               type="text"
               inputMode="numeric"
               value={formState.experienceDays}
+              placeholder={FORM_PLACEHOLDERS.experienceDays}
               onChange={(e) => updateForm({ experienceDays: e.target.value })}
             />
             {errors.experienceDays && (
@@ -295,6 +321,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
             label="現場で使っている言語（必須）"
             items={formState.useLangs}
             onChange={(items) => updateForm({ useLangs: items })}
+            placeholder={FORM_PLACEHOLDERS.useLang}
             error={errors.useLangs}
           />
 
@@ -304,6 +331,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
               type="text"
               inputMode="numeric"
               value={formState.availableStartCode}
+              placeholder={FORM_PLACEHOLDERS.availableStartCode}
               onChange={(e) =>
                 updateForm({ availableStartCode: e.target.value })
               }
@@ -319,6 +347,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
               type="text"
               inputMode="numeric"
               value={formState.availableEndCode}
+              placeholder={FORM_PLACEHOLDERS.availableEndCode}
               onChange={(e) => updateForm({ availableEndCode: e.target.value })}
             />
             {errors.availableEndCode && (

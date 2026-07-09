@@ -1,22 +1,20 @@
 import type { ListFieldItem } from "../types";
+import { createListItem } from "../utils/listField";
 
 type ListFieldProps = {
   label: string;
   items: ListFieldItem[];
   onChange: (items: ListFieldItem[]) => void;
   error?: string;
+  placeholder?: string;
 };
-
-const createListItem = (): ListFieldItem => ({
-  id: crypto.randomUUID(),
-  value: "",
-});
 
 export const ListField = ({
   label,
   items,
   onChange,
   error,
+  placeholder,
 }: ListFieldProps) => {
   const handleValueChange = (id: string, value: string) => {
     onChange(
@@ -41,6 +39,7 @@ export const ListField = ({
             <input
               type="text"
               value={item.value}
+              placeholder={placeholder}
               onChange={(e) => handleValueChange(item.id, e.target.value)}
             />
             <button type="button" onClick={() => handleRemove(item.id)}>

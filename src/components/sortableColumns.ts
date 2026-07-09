@@ -1,5 +1,4 @@
-import type { SortKey } from "../types";
-import type { Tab } from "../types";
+import type { SortKey, Tab } from "../types";
 import type { ColumnKey } from "./tableColumns";
 
 export const isSortKey = (key: ColumnKey): key is SortKey =>

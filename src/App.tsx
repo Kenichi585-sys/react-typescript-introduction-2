@@ -22,7 +22,7 @@ const INITIAL_FILTER_STATE: FilterState = {
   useLangs: [],
 };
 
-function App() {
+const App = () => {
   const [users, setUsers] = useState<User[]>(USER_LIST);
   const [activeTab, setActiveTab] = useState<Tab>("all");
   const [sortState, setSortState] = useState<SortState>(null);
@@ -113,6 +113,6 @@ function App() {
       />
     </div>
   );
-}
+};
 
 export default App;

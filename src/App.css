@@ -199,6 +199,12 @@
   font-size: 0.875rem;
 }
 
+.form-field:has(.form-error) input[type="text"],
+.form-field:has(.form-error) input[type="email"],
+.form-field:has(.form-error) input[type="url"] {
+  border-color: #c0392b;
+}
+
 .form-role-toggle {
   display: flex;
   gap: 1rem;
