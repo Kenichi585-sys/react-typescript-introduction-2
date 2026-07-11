@@ -1,122 +1,118 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useMemo, useState } from "react";
+import "./App.css";
+import { UserFormModal } from "./components/UserFormModal";
+import { UserTable } from "./components/UserTable";
+import { Toolbar } from "./components/Toolbar";
+import { USER_LIST } from "./data";
+import { applySort } from "./utils/sort";
+import { applyFilter, collectFilterOptions } from "./utils/filter";
+import {
+  isMentor,
+  isStudent,
+  type FilterState,
+  type SortKey,
+  type SortState,
+  type Tab,
+  type User,
+} from "./types";
 
-function App() {
-  const [count, setCount] = useState(0)
+const INITIAL_FILTER_STATE: FilterState = {
+  hobbies: [],
+  studyLangs: [],
+  useLangs: [],
+};
+
+const App = () => {
+  const [users, setUsers] = useState<User[]>(USER_LIST);
+  const [activeTab, setActiveTab] = useState<Tab>("all");
+  const [sortState, setSortState] = useState<SortState>(null);
+  const [filterState, setFilterState] =
+    useState<FilterState>(INITIAL_FILTER_STATE);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // タブ切替時はソート・フィルタをリセット（SPEC 準拠）
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab);
+    setSortState(null);
+    setFilterState(INITIAL_FILTER_STATE);
+  };
+
+  const handleSortClick = (key: SortKey) => {
+    if (sortState?.key !== key) {
+      setSortState({ key, direction: "asc" });
+      return;
+    }
+    if (sortState.direction === "asc") {
+      setSortState({ key, direction: "desc" });
+      return;
+    }
+    setSortState(null);
+  };
+
+  const handleFilterChange = (filter: FilterState) => {
+    setFilterState(filter);
+  };
+
+  const handleAddUser = (user: User) => {
+    setUsers((prev) => [...prev, user]);
+    setActiveTab("all");
+    setSortState(null);
+    setFilterState(INITIAL_FILTER_STATE);
+    setIsFormOpen(false);
+  };
+
+  const filterOptions = useMemo(
+    () => ({
+      hobbies: collectFilterOptions(users, "hobbies"),
+      studyLangs: collectFilterOptions(users, "studyLangs"),
+      useLangs: collectFilterOptions(users, "useLangs"),
+    }),
+    [users],
+  );
+
+  const displayUsers = useMemo(() => {
+    let result = users;
+    if (activeTab === "student") {
+      result = result.filter(isStudent);
+    } else if (activeTab === "mentor") {
+      result = result.filter(isMentor);
+    }
+    result = applyFilter(result, filterState, activeTab);
+    return applySort(result, sortState);
+  }, [users, activeTab, filterState, sortState]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <header className="app-header">
+        <h1>ユーザー一覧管理</h1>
+      </header>
 
-      <div className="ticks"></div>
+      <main className="app-main">
+        <Toolbar
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          filterState={filterState}
+          filterOptions={filterOptions}
+          onFilterChange={handleFilterChange}
+          onOpenForm={() => setIsFormOpen(true)}
+        />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <UserTable
+          users={displayUsers}
+          allUsers={users}
+          activeTab={activeTab}
+          sortState={sortState}
+          onSortClick={handleSortClick}
+        />
+      </main>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
+      <UserFormModal
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        onSubmit={handleAddUser}
+      />
+    </div>
+  );
+};
 
-export default App
+export default App;
