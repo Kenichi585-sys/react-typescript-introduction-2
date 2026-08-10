@@ -1,73 +1,77 @@
-# React + TypeScript + Vite
+# 生徒・メンター管理ダッシュボード
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**デモ**: https://（Vercel デプロイ後に記入）
 
-Currently, two official plugins are available:
+React + TypeScript の実践学習の一環として、生徒とメンターの情報を一覧・絞り込み・追加できる管理画面を作成しました。1周目の実装を振り返り、型設計や構成に改善余地を感じたため、仕様書・設計書を整えてから作り直しています。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## スクリーンショット
 
-## React Compiler
+### 一覧画面
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+![一覧画面](./docs/screenshots/list-view.png)
 
-## Expanding the ESLint configuration
+### 新規作成フォーム（バリデーションエラー）
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+![新規作成フォーム（バリデーションエラー）](./docs/screenshots/form-validation.png)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 主な機能
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- 全員 / 生徒 / メンターのタブ切り替え
+- テーブルヘッダークリックによる並び替え（昇順 / 降順 / 解除）
+- 趣味・言語のチェックボックス複数選択による絞り込み
+- 新規ユーザー作成（バリデーション付き）
+- 課題番号に基づくメンター ↔ 生徒の対応関係表示
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 技術スタック
+
+- React 19
+- TypeScript
+- Vite
+- ESLint
+
+## 背景
+
+React + TypeScript の UI 実装を深く理解するため、同テーマの管理画面の設計・実装に取り組みました。最初の版（https://github.com/Kenichi585-sys/react-typescript-introduction）
+では型の扱いやファイル構成に課題があったため、改善点を整理し、[SPEC.md](./SPEC.md) と [DESIGN.md](./DESIGN.md) を作成したうえで、AI との ペアプログラミング を通じて再実装しています。
+
+## 設計上のポイント
+
+- 生徒とメンターで属性が異なるため、`Student | Mentor` の判別可能 Union 型で型安全に設計
+- ソート・フィルタ・マッチング・バリデーションを `utils/` に分離し、`App.tsx` は state 管理と表示用リストの組み立てに集中
+- フォームの入力 state は `UserForm` 内に閉じ、送信時のみ親に渡す
+- モーダル（`UserFormModal`）とフォーム本体（`UserForm`）、リスト入力（`ListField`）を責務ごとに分割
+
+## 設計ドキュメント
+
+- [仕様書（SPEC.md）](./SPEC.md)
+- [設計書（DESIGN.md）](./DESIGN.md)
+
+## セットアップ
+
+```bash
+git clone git@github.com:Kenichi585-sys/react-typescript-introduction-2.git
+cd react-typescript-introduction-2
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 利用可能な npm scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| コマンド          | 説明               |
+| ----------------- | ------------------ |
+| `npm run dev`     | 開発サーバーを起動 |
+| `npm run build`   | 本番ビルド         |
+| `npm run preview` | ビルド結果の確認   |
+| `npm run lint`    | ESLint を実行      |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ディレクトリ構成
+
+```
+src/
+├── components/   # Toolbar, UserTable, TableHeader, UserFormModal, UserForm, ListField
+├── utils/        # filter, sort, match, validation
+├── types.ts      # 型定義（Student / Mentor の判別可能 Union 型など）
+├── data.ts       # 初期データ（モック）
+├── App.tsx       # 状態管理・表示用リストの計算
+└── index.css     # スタイル
 ```
