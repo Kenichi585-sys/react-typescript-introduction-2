@@ -2,17 +2,26 @@
 
 **デモ**: https://（Vercel デプロイ後に記入）
 
-React + TypeScript の実践学習の一環として、生徒とメンターの情報を一覧・絞り込み・追加できる管理画面を作成しました。1周目の実装を振り返り、型設計や構成に改善余地を感じたため、仕様書・設計書を整えてから作り直しています。
+React + TypeScript の実践学習の一環として、生徒とメンターの情報を一覧・絞り込み・追加できる管理画面を作成しました。1周目の実装（https://github.com/Kenichi585-sys/react-typescript-introduction）
+を振り返り、型設計や構成に改善余地を感じたため、仕様書・設計書を整えてから作り直しています。
 
 ## スクリーンショット
 
-### 一覧画面
+### 一覧画面（全員タブ）
 
 ![一覧画面](./docs/screenshots/list-view.png)
 
 ### 新規作成フォーム（バリデーションエラー）
 
 ![新規作成フォーム（バリデーションエラー）](./docs/screenshots/form-validation.png)
+
+### 生徒のみタブ
+
+![生徒のみタブ](./docs/screenshots/student-tab.png)
+
+### 趣味フィルタ（サーフィン / 食べ歩き）
+
+![趣味フィルタ適用中](./docs/screenshots/filter-hobbies.png)
 
 ## 主な機能
 
@@ -31,8 +40,7 @@ React + TypeScript の実践学習の一環として、生徒とメンターの�
 
 ## 背景
 
-React + TypeScript の UI 実装を深く理解するため、同テーマの管理画面の設計・実装に取り組みました。最初の版（https://github.com/Kenichi585-sys/react-typescript-introduction）
-では型の扱いやファイル構成に課題があったため、改善点を整理し、[SPEC.md](./SPEC.md) と [DESIGN.md](./DESIGN.md) を作成したうえで、AI との ペアプログラミング を通じて再実装しています。
+React + TypeScript の UI 実装を深く理解するため、同テーマの管理画面の設計・実装に取り組みました。最初の版では型の扱いやファイル構成に課題があったため、改善点を整理し、[SPEC.md](./SPEC.md) と [DESIGN.md](./DESIGN.md) を作成したうえで、AI との ペアプログラミング を通じて再実装しています。
 
 ## 設計上のポイント
 
