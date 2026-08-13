@@ -36,6 +36,8 @@ React + TypeScript の実践学習の一環として、生徒とメンターの�
 - React 19
 - TypeScript
 - Vite
+- Vitest
+- Playwright
 - ESLint
 
 ## 背景
@@ -71,6 +73,39 @@ npm run dev
 | `npm run build`   | 本番ビルド         |
 | `npm run preview` | ビルド結果の確認   |
 | `npm run lint`    | ESLint を実行      |
+| `npm run test`    | Vitest（watch）    |
+| `npm run test:run`| Vitest（1回実行）  |
+| `npm run coverage`| utils のカバレッジ |
+| `npm run test:e2e`| Playwright E2E     |
+| `npm run test:e2e:ui` | Playwright UI モード |
+
+## テスト
+
+### 単体テスト（Vitest）
+
+`src/utils/` のロジック（ソート・フィルタ・マッチング・バリデーション）をカバーします。
+
+```bash
+TMPDIR=/tmp npm run test:run
+TMPDIR=/tmp npm run coverage
+```
+
+### E2E テスト（Playwright）
+
+主要ユーザーストーリー 8 本（一覧表示、タブ切替＋フィルタリセット、ソート、フィルタ OR/AND、新規作成エラー、生徒・メンター作成成功）。テスト本体は `e2e/` 配下。
+
+初回のみブラウザをインストール:
+
+```bash
+PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium
+```
+
+実行:
+
+```bash
+TMPDIR=/tmp npm run test:e2e
+TMPDIR=/tmp npm run test:e2e:ui   # UI モード（デバッグ用）
+```
 
 ## ディレクトリ構成
 
@@ -82,4 +117,5 @@ src/
 ├── data.ts       # 初期データ（モック）
 ├── App.tsx       # 状態管理・表示用リストの計算
 └── index.css     # スタイル
+e2e/              # Playwright E2E テスト
 ```

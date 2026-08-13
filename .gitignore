@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+test-results
+playwright-report
+coverage
 
 # Editor directories and files
 .vscode/*
@@ -27,3 +30,4 @@ LEARNING_LOOP.md
 LEARNING_FOLLOW_UP.md
 CHECKLIST.local.md
 INTERVIEW_NOTES.local.md
+E2E_PLAN.local.md
