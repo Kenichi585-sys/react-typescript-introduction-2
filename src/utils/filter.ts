@@ -75,8 +75,7 @@ const userMatchesCategory = (
       );
     case "useLangs":
       return (
-        isMentor(user) &&
-        user.useLangs.some((lang) => selected.includes(lang))
+        isMentor(user) && user.useLangs.some((lang) => selected.includes(lang))
       );
   }
 };
