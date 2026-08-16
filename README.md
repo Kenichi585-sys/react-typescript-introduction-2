@@ -1,6 +1,6 @@
 # 生徒・メンター管理ダッシュボード
 
-**デモ**: https://（Vercel デプロイ後に記入）
+**デモ**: https://react-typescript-introduction-2.vercel.app/
 
 React + TypeScript の実践学習の一環として、生徒とメンターの情報を一覧・絞り込み・追加できる管理画面を作成しました。1周目の実装（https://github.com/Kenichi585-sys/react-typescript-introduction）
 を振り返り、型設計や構成に改善余地を感じたため、仕様書・設計書を整えてから作り直しています。
@@ -67,16 +67,16 @@ npm run dev
 
 ## 利用可能な npm scripts
 
-| コマンド          | 説明               |
-| ----------------- | ------------------ |
-| `npm run dev`     | 開発サーバーを起動 |
-| `npm run build`   | 本番ビルド         |
-| `npm run preview` | ビルド結果の確認   |
-| `npm run lint`    | ESLint を実行      |
-| `npm run test`    | Vitest（watch）    |
-| `npm run test:run`| Vitest（1回実行）  |
-| `npm run coverage`| utils のカバレッジ |
-| `npm run test:e2e`| Playwright E2E     |
+| コマンド              | 説明                 |
+| --------------------- | -------------------- |
+| `npm run dev`         | 開発サーバーを起動   |
+| `npm run build`       | 本番ビルド           |
+| `npm run preview`     | ビルド結果の確認     |
+| `npm run lint`        | ESLint を実行        |
+| `npm run test`        | Vitest（watch）      |
+| `npm run test:run`    | Vitest（1回実行）    |
+| `npm run coverage`    | utils のカバレッジ   |
+| `npm run test:e2e`    | Playwright E2E       |
 | `npm run test:e2e:ui` | Playwright UI モード |
 
 ## テスト
