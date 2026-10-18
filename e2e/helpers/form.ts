@@ -57,7 +57,7 @@ export const fillMentorForm = async (
   input: MentorFormInput,
 ): Promise<void> => {
   await fillCommonFields(page, input);
-  await page.getByLabel("実務経験月数（必須）").fill(input.experienceDays);
+  await page.getByLabel("実務経験日数（必須）").fill(input.experienceDays);
   await page
     .getByRole("group", { name: "現場で使っている言語（必須）" })
     .getByRole("textbox")

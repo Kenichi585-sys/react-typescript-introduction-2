@@ -48,7 +48,7 @@ const STUDENT_COLUMNS: ColumnDef[] = [
 ];
 
 const MENTOR_COLUMNS: ColumnDef[] = [
-  { key: "experienceDays", label: "実務経験月数", role: "mentor" },
+  { key: "experienceDays", label: "実務経験日数", role: "mentor" },
   { key: "useLangs", label: "現場で使っている言語", role: "mentor" },
   { key: "availableStartCode", label: "担当できる課題番号初め", role: "mentor" },
   { key: "availableEndCode", label: "担当できる課題番号終わり", role: "mentor" },

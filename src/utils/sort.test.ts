@@ -123,7 +123,7 @@ describe("applySort", () => {
     ).toEqual(["生徒・勉強時間少", "生徒・勉強時間多"]);
   });
 
-  it("実務経験月数の昇順で並ぶ", () => {
+  it("実務経験日数の昇順で並ぶ", () => {
     expect(
       namesOf(
         applySort(usersInFixedOrder, {

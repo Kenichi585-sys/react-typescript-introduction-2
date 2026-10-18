@@ -304,7 +304,7 @@ export const UserForm = ({ onSubmit, onCancel }: UserFormProps) => {
       ) : (
         <>
           <label className="form-field">
-            実務経験月数（必須）
+            実務経験日数（必須）
             <input
               type="text"
               inputMode="numeric"

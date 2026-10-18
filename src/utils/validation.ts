@@ -118,7 +118,7 @@ const validateMentorFields = (
   errors: UserFormErrors,
 ): void => {
   if (form.experienceDays === "") {
-    errors.experienceDays = "実務経験月数を入力してください";
+    errors.experienceDays = "実務経験日数を入力してください";
   } else if (!isNonNegativeInteger(form.experienceDays)) {
     errors.experienceDays = "0以上の数を入力してください";
   }
